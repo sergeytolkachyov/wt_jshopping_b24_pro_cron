@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields name="params">
+		<fieldset name="task_params">
+			<field type="list"
+				   label="PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_LABEL"
+				   name="update_product_data"
+				   multiple="true">
+				<option value="price">PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_PRICE</option>
+				<option value="quantity">PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_QUANTITY</option>
+			</field>
+		</fieldset>
+	</fields>
+</form>
