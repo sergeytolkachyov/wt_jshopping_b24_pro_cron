@@ -3,11 +3,11 @@
 	<fields name="params">
 		<fieldset name="task_params">
 			<field type="list"
-				   label="PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_LABEL"
+				   label="PLG_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_LABEL"
 				   name="update_product_data"
 				   multiple="true">
-				<option value="price">PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_PRICE</option>
-				<option value="quantity">PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_QUANTITY</option>
+				<option value="price">PLG_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_PRICE</option>
+				<option value="quantity">PLG_WT_JSHOPPING_B24_PRO_CRON_TASK_PARAMS_UPDATE_PRODUCT_DATA_QUANTITY</option>
 			</field>
 		</fieldset>
 	</fields>
