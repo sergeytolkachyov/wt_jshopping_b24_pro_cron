@@ -18,7 +18,6 @@ use Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent;
 use Joomla\Component\Scheduler\Administrator\Task\Status as TaskStatus;
 use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Event\SubscriberInterface;
-use Joomla\Registry\Registry;
 use Joomla\Plugin\System\Wt_jshopping_b24_pro\Library\CRest;
 
 
@@ -38,7 +37,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 	 */
 	protected const TASKS_MAP = [
 		'plg_task_update_jshopping_data_from_bitrix24_task_update' => [
-			'langConstPrefix' => 'PLG_TASK_WT_JSHOPPING_B24_PRO_CRON_UPDATE_JSHOPPING_DATA_FROM_BITRIX24',
+			'langConstPrefix' => 'PLG_WT_JSHOPPING_B24_PRO_CRON_UPDATE_JSHOPPING_DATA_FROM_BITRIX24',
 			'form'            => 'update_jshopping_data_from_bitrix24',
 			'method'          => 'update_jshopping_data_from_bitrix24',
 		],
@@ -195,7 +194,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 						'iblockId' => $task_params->default_bitrix24_store_iblock_id
 					]
 				]);
-				$resultBitrix24['product_quantity'] = $resultBitrix24ProductQuantity['result']['products'][0]['quantity'];
+				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
 			}
 
 
