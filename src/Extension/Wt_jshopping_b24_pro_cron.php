@@ -252,8 +252,8 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 				]);
 
 				if(isset($resultBitrix24ProductPrice['error'])){
-					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice).PHP_EOL;
-					$this->logTask(__FUNCTION__.", B24 product id = ".b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice), 'error');
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice), 'error');
 				}
 
 				$resultBitrix24['product_price'] = $resultBitrix24ProductPrice['result']['prices'][0]['price'];
@@ -271,8 +271,8 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					]
 				]);
 				if(isset($resultBitrix24ProductQuantity['error'])){
-					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity).PHP_EOL;
-					$this->logTask(__FUNCTION__.", B24 product id = ".b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
 				}
 				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
 			}
