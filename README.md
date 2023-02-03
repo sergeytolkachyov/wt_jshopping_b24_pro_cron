@@ -18,7 +18,8 @@ Now the script "sleeps" 0.5 seconds after each executed request. It takes 2 requ
 | Product with 1 (main) variation and 2 attributes | 1                  | 6            | 3s                                   |
 |                                                  | 100                | 6            | 300s (5 min)                         |
 |                                                  | 3000               | 6            | 9000s (~150 min = 2h 30min)          |
-
+### Task snapshot added
+Now you can see plugin snapshot when you're running the test.
 ## v.1.1.0 Variations of Bitrix 24 products 
 **Need a [WT JoomShopping Bitrix 24 PRO plugin](https://github.com/sergeytolkachyov/wt_jshopping_b24_pro) minimal version 3.1.0 for work**
 Added an update of prices and balances of JoomShopping products with dependent attributes from variations of Bitrix 24 products. For a correct update, you need to configure the mapping of JoomShopping attributes with variations of Bitrix 24 products. If you have a product without dependent attributes, and a product in Bitrix24 with a variation, specify the main variation for the product in JoomShopping.
