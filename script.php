@@ -39,16 +39,7 @@ class plgTaskWt_jshopping_b24_pro_cronInstallerScript
      */
     public function install($installer)
     {
-	    $version = new Version;
 
-	    // only for Joomla 3.x
-
-	    if (version_compare($version->getShortVersion(), '4.0', '<')) {
-
-		    Factory::getApplication()->enqueueMessage('&#128546; <strong>WT JShopping Bitrix 24 PRO</strong> plugin doesn\'t support Joomla versions <span class="alert-link">lower 4</span>. Your Joomla version is <span class="badge badge-important">'.$version->getShortVersion().'</span>','error');
-		    return false;
-
-	    }
     }
 
     /**
@@ -86,20 +77,17 @@ class plgTaskWt_jshopping_b24_pro_cronInstallerScript
      *                           - * discover_install
      * @param  \stdClass $installer - Parent object calling object.
      *
-     * @return void
+     * @return boolean
      */
     public function preflight($type, $installer) 
     {
 	    $version = new Version;
 
 	    // only for Joomla 3.x
-
-	    if (version_compare($version->getShortVersion(), '4.0', '<')) {
-
-		    Factory::getApplication()->enqueueMessage('&#128546; <strong>WT JShopping Bitrix 24 PRO</strong> plugin doesn\'t support Joomla versions <span class="alert-link">lower 4</span>. Your Joomla version is <span class="badge badge-important">'.$version->getShortVersion().'</span>','error');
-		    return false;
-
-	    }
+		if(!$version->isCompatible('4.1')){
+			Factory::getApplication()->enqueueMessage('&#128546; <strong>WT JShopping Bitrix 24 PRO CRON</strong> plugin doesn\'t support Joomla versions <span class="alert-link">lower 4</span>. Your Joomla version is <span class="badge badge-important">'.$version->getShortVersion().'</span>','error');
+			return false;
+		}
     }
 	
 
