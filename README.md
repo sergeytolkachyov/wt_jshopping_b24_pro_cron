@@ -1,5 +1,7 @@
 # WT JShopping Bitrix 24 PRO CRON
 Joomla 4.1+ task scheduler plugin for updating prices and quantities in JoomShopping products form Bitrix 24
+## v.1.1.1 Variations of Bitrix 24 products
+
 ## v.1.1.0 Variations of Bitrix 24 products 
 **Need a [WT JoomShopping Bitrix 24 PRO plugin](https://github.com/sergeytolkachyov/wt_jshopping_b24_pro) minimal version 3.1.0 for work**
 Added an update of prices and balances of JoomShopping products with dependent attributes from variations of Bitrix 24 products. For a correct update, you need to configure the mapping of JoomShopping attributes with variations of Bitrix 24 products. If you have a product without dependent attributes, and a product in Bitrix24 with a variation, specify the main variation for the product in JoomShopping.

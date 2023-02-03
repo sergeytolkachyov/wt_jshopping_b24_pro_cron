@@ -212,7 +212,6 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					$this->snapshot['output'] .= '> There is no product data form Bitrix 24 for product with ID ' . $relationship['bitrix24_product_id'].PHP_EOL;
 					$this->logTask('There is no product data form Bitrix 24 for product with ID ' . $relationship['bitrix24_product_id'], 'warning');
 				}
-				sleep(1);
 			}
 		}
 		else
@@ -257,6 +256,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 				}
 
 				$resultBitrix24['product_price'] = $resultBitrix24ProductPrice['result']['prices'][0]['price'];
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 			if (in_array('quantity', $task_params->update_product_data))
@@ -275,6 +275,8 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					$this->logTask(__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
 				}
 				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
+
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 
