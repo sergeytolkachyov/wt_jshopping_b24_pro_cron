@@ -79,10 +79,13 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 	 */
 	protected function update_jshopping_data_from_bitrix24(ExecuteTaskEvent $event): int
 	{
+		$this->snapshot['output'] = '======= WT JShopping Bitrix 24 PRO CRON  ======='.PHP_EOL;
 		$id     = $event->getTaskId();
 		$params = $event->getArgument('params');
 		if (!PluginHelper::isEnabled('system', 'wt_jshopping_b24_pro'))
 		{
+			$this->snapshot['output'] .= '> WARNING: WT JoomShopping Bitrix 24 PRO is not enabled';
+
 			$this->logTask(Text::_('WT JoomShopping Bitrix 24 PRO is not enabled'), 'warning');
 
 			return TaskStatus::NO_RUN;
@@ -103,6 +106,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 		}
 		else
 		{
+			$this->snapshot['output'] .= '> ERROR: Bitrix 24 webhook data are not exists in WT JoomShopping Bitrix 24 PRO plugin';
 
 			$this->logTask("Bitrix 24 webhook data are not exists in WT JoomShopping Bitrix 24 PRO plugin", 'error');
 
@@ -131,7 +135,6 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					$b24_product_data = $this->getB24Product($relationship['bitrix24_product_id'], $params);
 				}
 
-
 				if (count($b24_product_data) > 0)
 				{
 
@@ -155,7 +158,12 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 
 					$query->where($db->quoteName("product_id") . " = " . $relationship['jshopping_product_id']);
 					$result = $db->setQuery($query)->execute();
-					$this->logTask('JoomShopping product id ' . $relationship['jshopping_product_id'] . ' successfully updated from Bitrix 24. New data: ' . $message_new_product_price . $message_new_product_quantity, 'INFO');
+
+					$this->snapshot['output'] .= '> JoomShopping product id: '.$relationship['jshopping_product_id'].' successfully updated from Bitrix 24.'.PHP_EOL.
+						'> New data: ' . $message_new_product_price . $message_new_product_quantity.PHP_EOL.
+						'-----------'.PHP_EOL;
+
+					$this->logTask('JoomShopping product id ' . $relationship['jshopping_product_id'] . ' successfully updated from Bitrix 24. New data: ' . $message_new_product_price . $message_new_product_quantity, 'info');
 
 					// Если включена настройка использования товаров Битрикс 24 с вариациями
 					if ($wt_jshopping_b24_pro_params->use_bitrix24_product_variants == 1)
@@ -188,7 +196,12 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 
 									$query->where($db->quoteName("product_attr_id") . " = " . $variation['product_attr_id']);
 									$result = $db->setQuery($query)->execute();
-									$this->logTask('JoomShopping product (id ' . $relationship['jshopping_product_id'] . ') attribute (id ' . $variation['product_attr_id'] . ') successfully updated from Bitrix 24. New data: ' . $message_new_product_attr_price . $message_new_product_attr_quantity, 'INFO');
+
+									$this->snapshot['output'] .= '> JoomShopping product (id ' . $relationship['jshopping_product_id'] . ') attribute (id ' . $variation['product_attr_id'] . ') successfully updated from Bitrix 24.'.PHP_EOL.
+										'> New data: ' . $message_new_product_attr_price . $message_new_product_attr_quantity.PHP_EOL.
+										'-----------'.PHP_EOL;
+
+									$this->logTask('JoomShopping product (id ' . $relationship['jshopping_product_id'] . ') attribute (id ' . $variation['product_attr_id'] . ') successfully updated from Bitrix 24. New data: ' . $message_new_product_attr_price . $message_new_product_attr_quantity, 'info');
 								}
 							}
 						}
@@ -196,15 +209,15 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 				}
 				else
 				{
-					$this->logTask('There is no product data form Bitrix 24 for ID ' . $relationship['bitrix24_product_id'], 'WARNING');
+					$this->snapshot['output'] .= '> There is no product data form Bitrix 24 for product with ID ' . $relationship['bitrix24_product_id'].PHP_EOL;
+					$this->logTask('There is no product data form Bitrix 24 for product with ID ' . $relationship['bitrix24_product_id'], 'warning');
 				}
-
 			}
 		}
 		else
 		{
-
-			$this->logTask("There is no JoomShopping and Bitrix 24 products relationships exists in database", 'WARNING');
+			$this->snapshot['output'] .= '> There is no JoomShopping and Bitrix 24 products relationships exists in database'.PHP_EOL;
+			$this->logTask("There is no JoomShopping and Bitrix 24 products relationships exists in database", 'warning');
 
 			return TaskStatus::KNOCKOUT;
 		}
@@ -236,7 +249,14 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 						'productId' => $b24_product_id, // Фильтр по id Товара
 					]
 				]);
+
+				if(isset($resultBitrix24ProductPrice['error'])){
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductPrice), 'error');
+				}
+
 				$resultBitrix24['product_price'] = $resultBitrix24ProductPrice['result']['prices'][0]['price'];
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 			if (in_array('quantity', $task_params->update_product_data))
@@ -250,7 +270,13 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 						'iblockId' => $task_params->default_bitrix24_store_iblock_id
 					]
 				]);
+				if(isset($resultBitrix24ProductQuantity['error'])){
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product id = ".$b24_product_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
+				}
 				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
+
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 
@@ -320,6 +346,11 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 						'productId' => $b24_product_variation_id, // Фильтр по id Товара
 					]
 				]);
+
+				if(isset($resultBitrix24['error'])){
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24), 'error');
+				}
 				$resultBitrix24['product_price'] = $resultBitrix24ProductPrice['result']['prices'][0]['price'];
 			}
 
@@ -334,9 +365,12 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 						'iblockId' => $task_params->bitrix24_products_variants_store_iblock_id
 					]
 				]);
+				if(isset($resultBitrix24ProductQuantity['error'])){
+					$this->snapshot['output'] .= '> '.__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity).PHP_EOL;
+					$this->logTask(__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
+				}
 				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
 			}
-
 
 			return $resultBitrix24;
 		}
