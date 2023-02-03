@@ -352,6 +352,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					$this->logTask(__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.price.list. Bitrix24 API response: '.implode(', ',$resultBitrix24), 'error');
 				}
 				$resultBitrix24['product_price'] = $resultBitrix24ProductPrice['result']['prices'][0]['price'];
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 			if (in_array('quantity', $task_params->update_product_data))
@@ -370,6 +371,7 @@ class Wt_jshopping_b24_pro_cron extends CMSPlugin implements SubscriberInterface
 					$this->logTask(__FUNCTION__.", B24 product variation id = ".$b24_product_variation_id.', Bitrix24 API call catalog.product.list. Bitrix24 API response: '.implode(', ',$resultBitrix24ProductQuantity), 'error');
 				}
 				$resultBitrix24['product_quantity'] = (!empty($resultBitrix24ProductQuantity['result']['products'][0]['quantity']) ? $resultBitrix24ProductQuantity['result']['products'][0]['quantity'] : 0);
+				usleep(500000); // sleep 500 ms due to 2 request per second Bitrix 24 REST API limit
 			}
 
 			return $resultBitrix24;
